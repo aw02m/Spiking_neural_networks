@@ -33,13 +33,20 @@ class ForceLearn:
         self,
         net: KNNet,
         lp: ForceParameters = ForceParameters(),
+        save_states: bool = False,
     ) -> None:
         self.lp = lp
         self.net = net
+        self.save_states = save_states
         # data.shape = (timesteps, dim_inout)
         # target_output.shape = (timesteps, dim_output)
 
-    def train(self, target_outputs: np.array, data: Optional[np.array] = None, state: Optional[KNNetState] = None):
+    def train(
+        self,
+        target_outputs: np.array,
+        data: Optional[np.array] = None,
+        state: Optional[KNNetState] = None,
+    ):
         target_outputs = torch.from_numpy(target_outputs).to(self.net.device)
         if not data is None:
             data = torch.from_numpy(data).to(self.net.device)
@@ -51,14 +58,20 @@ class ForceLearn:
         Pinv = self.lp.lr * torch.eye(self.net.hidden_weights.shape[0]).type(
             torch.float
         ).to(self.net.device)
+        if self.save_states:
+            states = []
         for ts in tqdm(range(T)):
             out, r, s = self.net.step(state=s, prev_out=out)
+            if self.save_states:
+                states.append(KNNetState(s.x.cpu(), s.y.cpu(), s.z.cpu(), s.ISPC.cpu()))
             outputs.append(out.cpu())
             error = out - target_outputs[ts].reshape(out.shape)
             error = error.type(torch.float)
             if self.lp.start_learning < ts < self.lp.stop_learning:
                 Pinv, output_weights = force_iteration(Pinv, r, error, output_weights)
                 self.net.output_weights = output_weights
+        if self.save_states:
+            return torch.stack(outputs), states
         return torch.stack(outputs)
 
     @property
