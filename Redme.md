@@ -1,10 +1,10 @@
 # Spiking neural networks
 
-## Install
+## Install: Linux
 
 ```
 git clone https://github.com/aw02m/Spiking_neural_networks
 python3 -m venv env
-cd discrete_network
+source env/bin/activate
 python setup.py install
 ```
