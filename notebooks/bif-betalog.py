@@ -12,7 +12,8 @@ print(f"Device = {device.type}")
 # params_spiking = KNNetParameters(eps = 0.015, beta = 0.05, d = 0.26, a = 0.25, J = 0.15)
 
 # normal spike
-params_spiking = KNNetParameters(eps = 0.02, beta = 0.0, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
+# params_spiking = KNNetParameters(eps = 0.02, beta = 0.0, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
+params_spiking = KNNetParameters(eps = 0.03, beta = 0.035, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
 
 def one_neuron(x0, y0, iteration, p: KNNetParameters):
     """The dynamics of one neuron. Return x, y."""
@@ -56,8 +57,8 @@ J = J.to(device)
 bifparams = []
 # for i in np.arange(0.01, 0.75, 0.01):
 for i in np.arange(0.0, 0.01, 0.01):
-    for j in np.arange(0.01, 1.2, 0.01):
-        p = KNNetParameters(eps=eps, J=J, q=j, g=i)
+    for j in np.arange(0.0, 0.5, 0.001):
+        p = KNNetParameters(eps=eps, J=J, q=0.7, g=0.05, beta=j)
 
         x_initial = 0.6 * torch.rand(hidden_size, 1).to(device)
         y_initial = torch.zeros(hidden_size, 1).to(device)
@@ -81,4 +82,4 @@ for i in np.arange(0.0, 0.01, 0.01):
     # break
 
 bifparams = np.array(bifparams)
-np.save('./bifparams', bifparams)
+np.save('./betalog', bifparams)
