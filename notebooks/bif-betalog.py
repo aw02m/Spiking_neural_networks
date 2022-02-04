@@ -13,7 +13,7 @@ print(f"Device = {device.type}")
 
 # normal spike
 # params_spiking = KNNetParameters(eps = 0.02, beta = 0.0, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
-params_spiking = KNNetParameters(eps = 0.03, beta = 0.035, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
+# params_spiking = KNNetParameters(eps = 0.03, beta = 0.035, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
 
 def one_neuron(x0, y0, iteration, p: KNNetParameters):
     """The dynamics of one neuron. Return x, y."""
@@ -31,34 +31,37 @@ def one_neuron(x0, y0, iteration, p: KNNetParameters):
 
 imin = 0; icrit = 15000; nt = 16000
 # imin = 0; icrit = 20000; nt = 21000
-f_out, _ = one_neuron(.5, 0, nt, params_spiking)
+# f_out, _ = one_neuron(.5, 0, nt, params_spiking)
 # %matplotlib inline
 # plt.figure()
 # plt.plot(f_out[0:500])
 # plt.show()
 # plt.close()
 
-f_out = f_out.reshape(f_out.shape[0], 1)
-print(f_out.shape)
+# f_out = f_out.reshape(f_out.shape[0], 1)
+# print(f_out.shape)
 
 input_size = 0
 hidden_size = 2000
 output_size = 1
-eps_m = 0.025
+eps_m = 0.03
 delta_eps = 0.005
 a = 0.25
 # a = 0.3
 eps = -delta_eps + 2 * delta_eps * torch.rand(hidden_size, 1).to(device) + eps_m
 #eps = torch.as_tensor(eps_m).to(device)
 # J = (1 + a - torch.sqrt(1 + a * a - a + 3 * eps)) / 3 + 0.01 # Slightly more bifurcation value
-J = (1 + a - torch.sqrt(1 + a * a - a + 3 * eps)) / 3 + 0.05
+J = (1 + a - torch.sqrt(1 + a * a - a + 3 * eps)) / 3 + 0.075
 J = J.to(device)
+p = KNNetParameters(eps=eps, J=J, q=0.5, g=0.05)
 # p = KNNetParameters(eps=eps, J=J, q=2.0)
 bifparams = []
 # for i in np.arange(0.01, 0.75, 0.01):
 for i in np.arange(0.0, 0.01, 0.01):
     for j in np.arange(0.0, 0.5, 0.001):
-        p = KNNetParameters(eps=eps, J=J, q=0.7, g=0.05, beta=j)
+        params_spiking = KNNetParameters(eps = 0.03, beta = j, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
+        f_out, _ = one_neuron(.5, 0, nt, params_spiking)
+        f_out = f_out.reshape(f_out.shape[0], 1)
 
         x_initial = 0.6 * torch.rand(hidden_size, 1).to(device)
         y_initial = torch.zeros(hidden_size, 1).to(device)
