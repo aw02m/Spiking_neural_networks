@@ -157,7 +157,7 @@ class KNNet:
         data: Optional[torch.tensor] = None,
         state: Optional[KNNetState] = None,
         prev_out: Optional[torch.Tensor] = None,
-    ) -> Tuple[torch.tensor, KNNetState]:
+    ) -> Tuple[torch.tensor, torch.tensor, KNNetState]:
         if state is None:
             state = KNNetState(
                 torch.zeros(size=(self.hidden_weights.shape[0], 1)).to(
