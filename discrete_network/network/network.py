@@ -93,9 +93,11 @@ class KNNet:
             self._hidden_weights *= self.p.g * (
                 torch.rand(size=(hidden_size, hidden_size)) < self.p.sparse_ratio
             ).type(torch.float)
-            self._hidden_weights /= torch.sqrt(
-                torch.as_tensor(hidden_size).type(torch.float)) * self.p.sparse_ratio
-            
+            self._hidden_weights /= (
+                torch.sqrt(torch.as_tensor(hidden_size).type(torch.float))
+                * self.p.sparse_ratio
+            )
+
         else:
             self._hidden_weights = hidden_weights
 
@@ -179,7 +181,7 @@ class KNNet:
             prev_out = prev_out.to(self.device)
         # between neurons hidden_weights * r, r = tanh(x)\
         JX = torch.mm(self.eta, prev_out) + state.ISPC
-        
+
         if data is None:
             _, new_state = knNetStep(JX, state, self.p)
         else:

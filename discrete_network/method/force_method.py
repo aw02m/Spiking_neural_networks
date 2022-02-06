@@ -14,14 +14,14 @@ class ForceParameters(NamedTuple):
 
 
 def force_iteration(
-        Pinv: torch.Tensor,
-        r: torch.Tensor,
-        error: torch.Tensor,
-        output_weights: torch.Tensor,
+    Pinv: torch.Tensor,
+    r: torch.Tensor,
+    error: torch.Tensor,
+    output_weights: torch.Tensor,
 ):
     cd_out = torch.mm(Pinv, r).type(torch.float)
     Pinv_out = Pinv - torch.mm(cd_out, torch.t(cd_out)) / (
-            1.0 + torch.mm(torch.t(r), cd_out)
+        1.0 + torch.mm(torch.t(r), cd_out)
     )
     cd_out = torch.mm(Pinv_out, r)
     phi_out = output_weights - torch.mm(cd_out, error.T)
@@ -30,21 +30,21 @@ def force_iteration(
 
 class ForceLearn:
     def __init__(
-            self,
-            net: KNNet,
-            lp: ForceParameters = ForceParameters(),
-            save_states: bool = False,
+        self,
+        net: KNNet,
+        lp: ForceParameters = ForceParameters(),
+        save_states: bool = False,
     ) -> None:
         self.lp = lp
         self.net = net
         self.save_states = save_states
 
     def train(
-            self,
-            target_outputs: np.array,
-            data: Optional[np.array] = None,
-            state: Optional[KNNetState] = None,
-            split_data: int = 0
+        self,
+        target_outputs: np.array,
+        data: Optional[np.array] = None,
+        state: Optional[KNNetState] = None,
+        split_data: int = 0,
     ):
 
         if not data is None:
@@ -71,10 +71,13 @@ class ForceLearn:
             outputs.append(out.cpu())
             if split_data > 0:
                 if ts % split_data == 0:
-                    target_outputs_torch = torch.from_numpy(target_outputs[split_data * j: split_data * (j + 1)]).to(
-                        self.net.device)
+                    target_outputs_torch = torch.from_numpy(
+                        target_outputs[split_data * j : split_data * (j + 1)]
+                    ).to(self.net.device)
                     j += 1
-                error = out - target_outputs_torch[ts - split_data * (j - 1)].reshape(out.shape)
+                error = out - target_outputs_torch[ts - split_data * (j - 1)].reshape(
+                    out.shape
+                )
             else:
                 error = out - target_outputs_torch[ts].reshape(out.shape)
             error = error.type(torch.float)
