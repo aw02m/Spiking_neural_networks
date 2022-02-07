@@ -8,13 +8,18 @@ from typing import NamedTuple, Optional, Tuple
 class KNNetParameters(NamedTuple):
     # shoud be tensor since these each neurons have each parameters
     eps: torch.Tensor = torch.as_tensor(0.015)
-    beta: torch.Tensor = torch.as_tensor(0.0)
+    beta: torch.Tensor = torch.as_tensor(0.075)
+    # beta: torch.Tensor = torch.as_tensor(0.0)
     d: torch.Tensor = torch.as_tensor(0.26)
     a: torch.Tensor = torch.as_tensor(0.25)
     x_th: torch.Tensor = torch.as_tensor(0.65)
     J: torch.Tensor = torch.as_tensor(0.1081)
+    # spike
     q: float = 0.6
     g: float = 0.04
+    # \beta > 0
+    # q: float = 1.8
+    # g: float = 1.0
     sparse_ratio: float = 0.1
     type_th: str = "tanh"
     # threshold of the Heviside function like H(x-x_th)
