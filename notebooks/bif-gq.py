@@ -79,8 +79,7 @@ for i in np.arange(0.0, 0.01, 0.01):
         # print(torch.log(L2))
         bifparams.append([i, j, torch.log(L2).item()])
         print(bifparams[-1])
-        break
-    break
 
-# bifparams = np.array(bifparams)
-# np.save('./bifparams', bifparams)
+
+bifparams = np.array(bifparams)
+np.save('./bifparams', bifparams)
