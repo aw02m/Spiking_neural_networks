@@ -54,7 +54,7 @@ J = J.to(device)
 # p = KNNetParameters(eps=eps, J=J, q=2.0)
 bifparams = []
 # for i in np.arange(0.01, 0.75, 0.01):
-for i in np.arange(0.0, 0.01, 0.01):
+for i in np.arange(0.0, 0.3, 0.01):
     for j in np.arange(0.01, 1.2, 0.01):
         # p = KNNetParameters(eps=eps, J=J, q=j, g=i)
         p = KNNetParameters(
