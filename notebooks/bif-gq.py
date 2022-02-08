@@ -58,7 +58,7 @@ for i in np.arange(0.0, 0.3, 0.01):
     for j in np.arange(0.01, 1.2, 0.01):
         # p = KNNetParameters(eps=eps, J=J, q=j, g=i)
         p = KNNetParameters(
-            eps=eps, a=torch.as_tensor(a), J=J, q=0.85, g=0.1, x_th=torch.as_tensor(0.65)
+            eps=eps, a=torch.as_tensor(a), J=J, q=j, g=i, x_th=torch.as_tensor(0.65)
         )
 
         x_initial = 0.9 * torch.rand(hidden_size, 1).to(device)
