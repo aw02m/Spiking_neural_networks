@@ -65,7 +65,8 @@ def knNetStep(
         - state.y
     )
     new_y = state.y + p.eps * (state.x - (p.J + input_tensor))
-    new_z = (new_x >= p.x_th).type(torch.float)
+    # new_z = (new_x >= p.x_th).type(torch.float)
+    new_z = torch.heaviside(new_x - p.x_th.to(input_tensor.device), values=torch.as_tensor(0.0).to(input_tensor.device))
     return new_z, KNNetState(new_x, new_y, new_z, state.ISPC)
 
 
