@@ -77,8 +77,6 @@ for i in np.arange(0.03, 0.04, 0.001):
         bifparams.append([i, j, torch.log(L2).item()])
         bifparams_second.append([i, j, torch.log(L2_second).item()])
         print(f'1dim: {bifparams[-1]}, 2dim: {bifparams_second[-1]}')
-        break
-    break
 
 
 bifparams = np.array(bifparams)
