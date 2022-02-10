@@ -53,7 +53,7 @@ bifparams = []
 bifparams_second = []
 
 for i in np.arange(0.02, 0.03, 0.001):
-    for j in np.arange(0.01, 0.1, 0.0025):
+    for j in np.arange(0.025, 0.1, 0.0025):
         params_spiking = KNNetParameters(eps = j, beta = i, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
         f_out_x, f_out_y = one_neuron(0.3, 0, nt, params_spiking)
         f_out = np.concatenate([[f_out_x], [f_out_y]], 0).T
@@ -77,6 +77,8 @@ for i in np.arange(0.02, 0.03, 0.001):
         bifparams.append([i, j, torch.log(L2).item()])
         bifparams_second.append([i, j, torch.log(L2_second).item()])
         print(f'1dim: {bifparams[-1]}, 2dim: {bifparams_second[-1]}')
+        break
+    break
 
 
 bifparams = np.array(bifparams)
