@@ -30,25 +30,23 @@ def one_neuron(x0, y0, iteration, p: KNNetParameters):
     return x, y
 
 imin = 0; icrit = 15000; nt = 16000
-# params_spiking = KNNetParameters(eps=0.035, beta=0.0375, d=0.26, a=0.25, J=0.1081 + 0.1)
+#params_spiking = KNNetParameters(eps=0.035, beta=0.0375, d=0.26, a=0.25, J=0.1081 + 0.1)
 params_spiking = KNNetParameters(eps = 0.02, beta = 0.0, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
 f_out, _ = one_neuron(.3, 0, nt, params_spiking)
 f_out = f_out.reshape(f_out.shape[0], 1)
-# f_out_x, f_out_y = one_neuron(0.3, 0, nt, params_spiking)
-# f_out = np.concatenate([[f_out_x], [f_out_y]], 0).T
+#f_out_x, f_out_y = one_neuron(0.3, 0, nt, params_spiking)
+#f_out = np.concatenate([[f_out_x], [f_out_y]], 0).T
 
 input_size = 0
 hidden_size = 2000
 output_size = 1
-# output_size = 2
+#output_size = 2
 
 bifparams = []
-#for i in np.arange(1000, 5050, 50):
-for i in np.arange(500, 3000, 50):
-    hidden_size = i
-    # eps_start = 0.01
-    # eps_stop = 0.1
-    # eps = eps_start + (eps_stop - eps_start) * torch.rand(hidden_size, 1).to(device)
+for i in np.arange(0.0, 0.025, 0.0005):
+    #eps_start = 0.01
+    #eps_stop = 0.1
+    #eps = eps_start + (eps_stop - eps_start) * torch.rand(hidden_size, 1).to(device)
     eps_m = 0.025
     delta_eps = 0
     eps = -delta_eps + 2 * delta_eps * torch.rand(hidden_size, 1).to(device) + eps_m
@@ -56,11 +54,11 @@ for i in np.arange(500, 3000, 50):
     J = (1 + a - torch.sqrt(1 + a * a - a + 3 * eps)) / 3 + 0.05
     #J = (1 + a - torch.sqrt(1 + a * a - a + 3 * eps)) / 3
     J = J.to(device)
-    p = KNNetParameters(eps=eps, J=J, q=0.6, g=0.04)
-    # p = KNNetParameters(
-    #     eps=eps, a=torch.as_tensor(a), J=J, q=1.1, g=0.1, x_th=torch.as_tensor(0.65),
-    #     beta=torch.as_tensor(0.0)
-    # )
+    p = KNNetParameters(eps=eps, J=J, beta=i, q=0.6, g=0.04)
+    #p = KNNetParameters(
+    #    eps=eps, a=torch.as_tensor(a), J=J, q=1.1, g=0.1, x_th=torch.as_tensor(0.65),
+    #    beta=i
+    #)
 
     x_initial = 0.6 * torch.rand(hidden_size, 1).to(device)
     y_initial = torch.zeros(hidden_size, 1).to(device)
@@ -75,8 +73,8 @@ for i in np.arange(500, 3000, 50):
     train_logs, states = fl.train(target_outputs=f_out, state=initial_state)
 
     L2 = torch.linalg.norm(train_logs[-1000:, 0, 0] - f_out[-1000:, 0])
-    bifparams.append([hidden_size, torch.log(L2).item()])
+    bifparams.append([i, torch.log(L2).item()])
     print(bifparams[-1])
 
 bifparams = np.array(bifparams)
-np.save('./Nlog_beta_zero', bifparams)
+np.save('./betalog_betazero', bifparams)
