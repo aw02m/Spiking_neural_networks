@@ -58,7 +58,7 @@ p = KNNetParameters(eps=eps, J=J, q=0.5, g=0.05)
 bifparams = []
 # for i in np.arange(0.01, 0.75, 0.01):
 for i in np.arange(0.0, 0.01, 0.01):
-    for j in np.arange(0.0, 0.5, 0.001):
+    for j in np.arange(0.0, 0.4, 0.02):
         params_spiking = KNNetParameters(eps = 0.03, beta = j, d = 0.26, a = 0.25, J = 0.1081 + 0.1)
         f_out, _ = one_neuron(.5, 0, nt, params_spiking)
         f_out = f_out.reshape(f_out.shape[0], 1)
